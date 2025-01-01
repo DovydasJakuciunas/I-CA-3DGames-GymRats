@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 //Reference for Mouse movement : https://www.youtube.com/watch?v=7eAwVUsiqZU
 
+
+//Error with the draw method, Not drawing the path accurately
 public class PlayerMovement : MonoBehaviour
 {
     #region Fields
@@ -15,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastClickTime;                        
     private const float DOUBLE_CLICK_TIME = 0.2f;       //Checks the thresehold for double click
     private float savedSpeed;                           //Reset the speed to original speed after double click
-    private bool isDoubleClicked;                       //So the player can't double click multiple times in turn speeding up the agent by each double click
+    private bool isDoubleClicked = false;                       //So the player can't double click multiple times in turn speeding up the agent by each double click
 
     #endregion
 
@@ -45,10 +47,23 @@ public class PlayerMovement : MonoBehaviour
     //Allows to draw a path for where the agent is going
     private void DrawPath()
     {
-        if (!line.enabled || player.path.corners.Length < 2) return;
+        if (!line.enabled || player.path.corners.Length < 1) return;
 
-        line.positionCount = player.path.corners.Length;
-        line.SetPositions(player.path.corners);
+        // Create a new array to hold the player's current position and path corners
+        Vector3[] pathCorners = new Vector3[player.path.corners.Length + 1];
+
+        // Add the player's current position as the first point
+        pathCorners[0] = transform.position;
+
+        // Add the rest of the path corners
+        for (int i = 0; i < player.path.corners.Length; i++)
+        {
+            pathCorners[i + 1] = player.path.corners[i];
+        }
+
+        // Set the LineRenderer positions to follow the updated path
+        line.positionCount = pathCorners.Length;
+        line.SetPositions(pathCorners);
     }
 
     //All code to handle mouse click

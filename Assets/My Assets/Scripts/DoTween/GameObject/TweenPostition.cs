@@ -31,11 +31,11 @@ namespace MyAssets.Tweens
 
         public override void StartTween()
         {
-            transform.DOMove(originalPosition + positionDelta, DurationSecs)
-                .SetDelay(DelaySecs)
-                    .SetEase(EaseFunction)
-                        .SetLoops(LoopCount, LoopType)
-                            .OnComplete(TweenComplete);
+            transform.DOMove(originalPosition + positionDelta, DurationSecs)            // Move the object to the new position
+                .SetDelay(DelaySecs)                                                    // Set the delay before the tween starts
+                    .SetEase(EaseFunction)                                              // Set the ease function
+                        .SetLoops(LoopCount, LoopType)                                  // Set the loop count and type 
+                            .OnComplete(TweenComplete);                                 // Call the tween complete method
         }
 
         public override void TweenComplete()

@@ -1,5 +1,7 @@
 using UnityEngine;
 
+//Code By Niall McGuinness
+
 namespace GD.Items
 {
     /// <summary>

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10a256d872f581c4093ac86045adf50e, type: 3}
-  m_Name: OnPickUpItem
+  m_Name: ItemGameEvent
   m_EditorClassIdentifier: 
-  name: Raised
-  description: Once item is interactedwith the player
+  name: On Using Item
+  description: Useing the item wheres it supposed to go into to

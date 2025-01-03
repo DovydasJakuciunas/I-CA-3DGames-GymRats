@@ -2,6 +2,8 @@ using GD.Types;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+//Code By Niall McGuinness
+
 namespace GD.Items
 {
     /// <summary>

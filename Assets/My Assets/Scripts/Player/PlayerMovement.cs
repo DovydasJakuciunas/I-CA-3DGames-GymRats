@@ -3,7 +3,6 @@ using UnityEngine.AI;
 
 //Reference for Mouse movement : https://www.youtube.com/watch?v=7eAwVUsiqZU
 
-
 //Error with the draw method, Not drawing the path accurately
 public class PlayerMovement : MonoBehaviour
 {

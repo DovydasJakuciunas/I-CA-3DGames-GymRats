@@ -3,6 +3,8 @@ using GD.Tweens;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+//Code By Niall McGuinness
+
 namespace MyAssets.Tweens
 {
     public class TweenPostition : BaseTween

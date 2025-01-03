@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+//Code By Niall McGuinness
+
 namespace GD.Events
 {
     /// <summary>

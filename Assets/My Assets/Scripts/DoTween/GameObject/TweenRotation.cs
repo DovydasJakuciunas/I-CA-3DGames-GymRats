@@ -2,6 +2,8 @@ using DG.Tweening;
 using GD.Tweens;
 using UnityEngine;
 
+//Used Niall McGuinness Code 
+
 namespace MyAssets.Tweens
 {
     public class TweenRotation : BaseTween

@@ -2,6 +2,8 @@ using GD.Types;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Code by Niall McGuinness
+
 namespace GD.Events
 {
     /// <summary>

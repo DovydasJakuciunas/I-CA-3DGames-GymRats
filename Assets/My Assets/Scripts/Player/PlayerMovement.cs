@@ -113,5 +113,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    // Checking if agent is moving for the Animator
+    public bool IsWalking
+    {
+        get
+        {
+            // Check if the agent is actively moving
+            return !player.pathPending &&
+                   player.remainingDistance > player.stoppingDistance &&
+                   player.velocity.sqrMagnitude > 0f;
+        }
+    }
+
+    // Checking if agent is sprinting for the Animator
+    public bool IsSprinting
+    {
+        get
+        {
+            // The player is sprinting if the speed has been doubled
+            return isDoubleClicked && IsWalking;
+        }
+    }
     #endregion
 }

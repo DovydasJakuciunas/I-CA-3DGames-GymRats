@@ -27,11 +27,17 @@ namespace GD.Items
             }
         }
 
-        /// <summary>
-        /// Adds the item to the inventory.
-        /// </summary>
-        /// <param name="data"></param>
-        public void OnInventoryAdd(ItemData data)
+        public void OnInteractablePickup(ItemData data)
+        {
+            inventoryCollection.Add(data);
+        }
+
+
+            /// <summary>
+            /// Adds the item to the inventory.
+            /// </summary>
+            /// <param name="data"></param>
+            public void OnInventoryAdd(ItemData data)
         {
             Debug.Log("Adding item to inventory: " + data.name);
 

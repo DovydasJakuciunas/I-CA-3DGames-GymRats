@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71dcab2184d66d47b48e06386e0b739, type: 3}
+  m_Name: Maths - Key
+  m_EditorClassIdentifier: 
+  name: Maths Key
+  description: Allows the key to work for the door
+  itemCategory: 0
+  itemType: 0
+  uiIcon: {fileID: 4143605862378377139, guid: 76a0ae3b6739b9d49b8afe591137c19d, type: 3}
+  audioClip: {fileID: 8300000, guid: d4bc03bd5c9be1f4ebce194732868282, type: 3}
+  audioPosition: {x: 2.5161417, y: 2.975216, z: -7.9871197}

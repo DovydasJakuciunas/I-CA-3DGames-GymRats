@@ -1,9 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-//Reference for Mouse movement : https://www.youtube.com/watch?v=7eAwVUsiqZU
-
-//Error with the draw method, Not drawing the path accurately
 public class PlayerMovement : MonoBehaviour
 {
     #region Fields
@@ -11,12 +9,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private NavMeshAgent player;
     [SerializeField] private GameObject targetDestination;
-    [SerializeField] private LineRenderer line;
+    [SerializeField] private GameObject sphere; // Reference to the sphere
+    private SphereVisibilityManager sphereManager;
 
-    private float lastClickTime;                        
-    private const float DOUBLE_CLICK_TIME = 0.2f;       //Checks the thresehold for double click
-    private float savedSpeed;                           //Reset the speed to original speed after double click
-    private bool isDoubleClicked = false;                       //So the player can't double click multiple times in turn speeding up the agent by each double click
+    private float lastClickTime;
+    private const float DOUBLE_CLICK_TIME = 0.2f; // Checks the threshold for double click
+    private float savedSpeed; // Reset the speed to original speed after double click
+    private bool isDoubleClicked = false; // Prevents multiple double clicks in turn speeding up the agent by each double click
+
+    private bool sphereActive = true; // Track sphere's state
+    private Coroutine sphereCoroutine; // Handle the coroutine for sphere visibility
 
     #endregion
 
@@ -26,59 +28,40 @@ public class PlayerMovement : MonoBehaviour
     {
         savedSpeed = player.speed;
         ResetPlayerSpeed();
+        sphereManager = new SphereVisibilityManager(sphere, transform, player, this);
     }
 
     private void Update()
     {
-        //Alows me to prevent much sliding on the navMeshSurface
-        player.acceleration = 60;
-        player.angularSpeed = 120;
+        // Prevent much sliding on the NavMeshSurface
+        player.acceleration = 10000;
+        player.angularSpeed = 10000;
+
+        //To showcase sphere when player reaches near it or turn it off
+        sphereManager.HandleSphereVisibility(IsWalking);
 
         if (Input.GetMouseButtonDown(0))
         {
             HandleMouseClick();
         }
 
-        DrawPath();
-        ResetSpeedWhenDestinationReached();    
+        ResetSpeedWhenDestinationReached();
+
     }
 
-    //Allows to draw a path for where the agent is going
-    private void DrawPath()
-    {
-        if (!line.enabled || player.path.corners.Length < 1) return;
-
-        // Create a new array to hold the player's current position and path corners
-        Vector3[] pathCorners = new Vector3[player.path.corners.Length + 1];
-
-        // Add the player's current position as the first point
-        pathCorners[0] = transform.position;
-
-        // Add the rest of the path corners
-        for (int i = 0; i < player.path.corners.Length; i++)
-        {
-            pathCorners[i + 1] = player.path.corners[i];
-        }
-
-        // Set the LineRenderer positions to follow the updated path
-        line.positionCount = pathCorners.Length;
-        line.SetPositions(pathCorners);
-    }
-
-    //All code to handle mouse click
+    // All code to handle mouse click
     private void HandleMouseClick()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);    //Get camera and get the mouse position
-        
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition); // Get camera and get the mouse position
 
-        if (Physics.Raycast(ray, out RaycastHit hitPoint))                  //If the raycast hit something move the agent to that position
+        if (Physics.Raycast(ray, out RaycastHit hitPoint)) // If the raycast hit something move the agent to that position
         {
             targetDestination.transform.position = hitPoint.point;
             player.SetDestination(hitPoint.point);
 
-            if (HasDoubleClicked())        //If the time since last click is less than the double click time
+            if (HasDoubleClicked()) // If the time since last click is less than the double click time
             {
-                player.speed = player.speed * 2;                            //Double the acceleration of agent
+                player.speed = player.speed * 2; // Double the acceleration of agent
                 isDoubleClicked = true;
             }
             else
@@ -88,28 +71,28 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //Method to check if player has double clicked
+    // Method to check if player has double clicked
     private bool HasDoubleClicked()
     {
-        float timeSinceLastClick = Time.time - lastClickTime;   //Gets the time since last click
-        lastClickTime = Time.time;                              //Gets last time mouse was clicked
-        return timeSinceLastClick <= DOUBLE_CLICK_TIME && !isDoubleClicked;    //If the time since last click is less than the double click time
+        float timeSinceLastClick = Time.time - lastClickTime; // Gets the time since last click
+        lastClickTime = Time.time; // Gets last time mouse was clicked
+        return timeSinceLastClick <= DOUBLE_CLICK_TIME && !isDoubleClicked; // If the time since last click is less than the double click time
     }
 
-    //Reset speed for agent
+    // Reset speed for agent
     private void ResetPlayerSpeed()
     {
         player.speed = savedSpeed;
         isDoubleClicked = false;
     }
 
-    //Method to see if player made it to destination
+    // Method to see if player made it to destination
     private void ResetSpeedWhenDestinationReached()
     {
-        if(!player.pathPending  && player.remainingDistance <= player.stoppingDistance && 
-            (!player.hasPath || player.velocity.sqrMagnitude ==0f))
+        if (!player.pathPending && player.remainingDistance <= player.stoppingDistance &&
+            (!player.hasPath || player.velocity.sqrMagnitude == 0f))
         {
-           ResetPlayerSpeed();
+            ResetPlayerSpeed();
         }
     }
 
@@ -134,5 +117,6 @@ public class PlayerMovement : MonoBehaviour
             return isDoubleClicked && IsWalking;
         }
     }
+
     #endregion
 }

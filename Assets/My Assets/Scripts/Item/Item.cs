@@ -52,7 +52,6 @@ namespace GD.Items
 
                 // Raise the event to notify listeners
                 onItemEvent?.Raise(itemData);
-                Debug.Log("Item picked up: " + itemData.name);
 
                 // Remove the item from the scene
                 Destroy(gameObject);

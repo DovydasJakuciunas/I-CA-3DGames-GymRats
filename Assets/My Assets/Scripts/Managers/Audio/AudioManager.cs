@@ -1,10 +1,9 @@
-using UnityEngine;
-using UnityEngine.Audio;
-using GD.Pool;
+using GD.Items;
 using GD.Types;
 using Sirenix.OdinInspector;
 using System.Collections;
-using UnityEngine.Pool;
+using UnityEngine;
+using UnityEngine.Audio;
 
 namespace GD.Audio
 {
@@ -97,6 +96,25 @@ namespace GD.Audio
         {
             yield return new WaitForSeconds(audioSource.clip.length);
             audioSourcePool.ReturnToPool(audioSource);
+        }
+
+        public void OnInteractablePickup(ItemData data)
+        {
+           Debug.Log($"Playing audio clip for {data.name}");
+           if (data == null )
+            {
+                Debug.LogWarning("ItemData is null");
+                return;
+            }
+
+            if (data.AudioPosition == null)
+            {
+                Debug.LogWarning("AudioPosition is null");
+            }
+
+            if (data.AudioClip != null ) {
+                AudioSource.PlayClipAtPoint(data.AudioClip, data.AudioPosition);
+            }
         }
     }
 }

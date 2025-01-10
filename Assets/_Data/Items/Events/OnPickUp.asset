@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a256d872f581c4093ac86045adf50e, type: 3}
   m_Name: OnPickUp
   m_EditorClassIdentifier: 
-  name: 
-  description: 
+  name: Item Pick Up
+  description: Player picked up an item.

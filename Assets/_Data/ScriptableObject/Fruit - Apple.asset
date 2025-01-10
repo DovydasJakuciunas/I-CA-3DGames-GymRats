@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e71dcab2184d66d47b48e06386e0b739, type: 3}
-  m_Name: Maths - Key
+  m_Name: Fruit - Apple
   m_EditorClassIdentifier: 
-  name: Maths Key
-  description: Allows the key to work for the door
+  name: Apple
+  description: Restores 10 stamina when consumed.
   itemCategory: 0
-  itemType: 0
-  uiIcon: {fileID: 4143605862378377139, guid: 76a0ae3b6739b9d49b8afe591137c19d, type: 3}
-  audioClip: {fileID: 8300000, guid: d4bc03bd5c9be1f4ebce194732868282, type: 3}
-  audioPosition: {x: 2.5161417, y: 2.975216, z: -7.9871197}
+  itemType: 4
+  uiIcon: {fileID: -6367837219966448765, guid: 375a132719b8f114aadcfda6bf62f8b1, type: 3}
+  audioClip: {fileID: 8300000, guid: c9c0a5d2c36c2c845ad43a3e06a33707, type: 3}
+  audioPosition: {x: -5.3698, y: 3.1619, z: 5.1921}

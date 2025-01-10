@@ -136,12 +136,6 @@ namespace GD.Types
         Informative,
 
         /// <summary>
-        /// Items used to unlock or solve puzzles or progress the storyline.
-        /// </summary>
-        [Description("Items used to unlock or solve puzzles or progress the storyline")]
-        PuzzleItem,
-
-        /// <summary>
         /// Items that serve as key resources, such as food, water, building materials, or power.
         /// </summary>
         [Description("Items that serve as resources or crafting materials")]
@@ -192,7 +186,7 @@ namespace GD.Types
         /// Represents a general resource such as food, water, or fuel.
         /// </summary>
         [Description("Resource item used in simulation games, such as food, water, or fuel")]
-        Resource,
+        Resource
 
     }
 }

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71dcab2184d66d47b48e06386e0b739, type: 3}
   m_Name: Fruit - Banana
   m_EditorClassIdentifier: 
-  name: 
-  description: 
-  itemCategory: 0
-  itemType: 4
-  uiIcon: {fileID: 0}
-  audioClip: {fileID: 0}
-  audioPosition: {x: 0, y: 0, z: 0}
+  name: Banana
+  description: Restore 50 Stamina when consumed
+  itemCategory: 5
+  itemType: 0
+  uiIcon: {fileID: -3989417037294542392, guid: dc095ce8d2086f541bd26c7e3a71ef12, type: 3}
+  audioClip: {fileID: 8300000, guid: c9c0a5d2c36c2c845ad43a3e06a33707, type: 3}
+  audioPosition: {x: -3.4659264, y: 2.581, z: 4.210853}

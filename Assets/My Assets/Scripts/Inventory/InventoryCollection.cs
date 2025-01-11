@@ -1,103 +1,100 @@
 using GD.Events;
-using GD.Types;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-
-//Used Niall McGuinness Code, https://github.com/nmcguinness/2024-25-GD3A-IntroToUnity/blob/4925c99ed50a84d14cf2764360d3a2936ce2be88/IntroToUnity/Assets/GD/Common/Scripts/Inventory/InventoryCollection.cs
 
 namespace GD.Items
 {
-
-
-    /// <summary>
-    /// Stores a dictionary of inventories
-    /// </summary>
-    /// <see cref="Inventory"/>
-    /// <see cref="InventoryManager"/>
-    [CreateAssetMenu(fileName = "InventoryCollection",
-        menuName = "GD/Inventory/Collection")]
-    public class InventoryCollection : SerializedScriptableObject
+    [CreateAssetMenu(fileName = "InventoryCollection", menuName = "GD/Inventory/Collection")]
+    public class InventoryCollection : SerializedScriptableObject //SerializedScriptableObject allows us to see what is happeing in the inventory
     {
+        /*MAIN DUTY OF THIS SCRIPT IS TO CREATE A SCRIPTABLE OBJECT THAT MANAGES COLLECTION OF INVENTORIES (INVENTORY OBJECTS)
+         * WITH METHODS TO ADD, REMOVE AND CLEAR THE INVENTORIES PLUS RAISE EVENTS WHEN SOMETHING IN THE COLLECTION CHANGES
+         * THIS SCRIPTABLE OBJECT WILL TAKE IN ANOTHER SCRIPTABLE OBJECT WHICH IS INVENTORY 
+         */
+
         #region Fields
 
         [SerializeField]
-        [Tooltip("A dictionary of all inventories (e.g. a saddlebag)")]
-        private Dictionary<ItemCategoryType, Inventory> contents = new Dictionary<ItemCategoryType, Inventory>();
+        [Tooltip("A list of all inventories (e.g. a saddlebag)")]
+        private List<Inventory> contents = new List<Inventory>();
 
         [FoldoutGroup("Events")]
         [SerializeField]
         [Tooltip("Event to raise when the collection changes.")]
-        private GameEvent onCollectionChange;
+        private GameEvent onCollectionChange; //event raise when for example an inventory is added or removed
 
         [FoldoutGroup("Events")]
         [SerializeField]
         [Tooltip("Event to raise when the collection is emptied.")]
-        private GameEvent onCollectionEmpty;
+        private GameEvent onCollectionEmpty; //when collection is cleared notice others
 
         #endregion Fields
 
         #region Properties
 
-        public Inventory this[ItemCategoryType categoryType]
+        public Inventory this[int index] //This is an indexer whivh allows access to the inventory at specific index 
         {
             get
             {
-                return contents[categoryType];
+                return contents[index];
+            }
+        }
+
+        public int Count //returns number of inventories in the collection
+        {
+            get
+            {
+                return contents.Count;
             }
         }
 
         #endregion Properties
 
-        public Inventory Get(ItemCategoryType itemCategory)
+        public Inventory Get(int index) //getter for inventory at specific index
         {
-            if (!contents.ContainsKey(itemCategory))
-                throw new NullReferenceException("No inventory for this item category");
+            if (index < 0 || index >= contents.Count)
+                throw new IndexOutOfRangeException("No inventory at this index");
 
-            return contents[itemCategory];
+            return contents[index];
         }
 
-        //add a new inventory to the collection
-        public void Add(ItemData itemData, int quantity = 1)
+        // Add a new inventory to the collection of inventories
+        public void Add(Inventory inventory)
         {
-            // If the inventory for the item category does not exist, create it
-            if (!contents.ContainsKey(itemData.ItemCategory))
+            if (!contents.Contains(inventory)) //if inventory is not already in the collection
             {
-                contents[itemData.ItemCategory] = new Inventory();
+                contents.Add(inventory); //add new one 
+                Debug.Log("Added inventory to collection");
+                if (onCollectionChange != null)
+                {
+                    onCollectionChange.Raise(); //raise event to notify others that collection has changed
+                    Debug.Log("onCollectionChange event raised");
+                }
+                else
+                {
+                    Debug.LogWarning("onCollectionChange event is null");
+                }
             }
-
-            // Add the specified quantity of the item to the inventory
-            contents[itemData.ItemCategory].Add(itemData, quantity);
-
-            // Tell interested parties that the collection has changed
-            onCollectionChange?.Raise();
-        }
-
-        /// <summary>
-        /// Removes all inventories from the collection.
-        /// </summary>
-        /// <returns></returns>
-        public bool Clear()
-        {
-            contents.Clear();
-            onCollectionEmpty?.Raise();
-            return contents.Count == 0;
         }
 
         // Removes an inventory from the collection
         public void Remove(Inventory inventory)
         {
-            // Find the key associated with the inventory
-            var key = contents.FirstOrDefault(x => x.Value == inventory).Key;
-
-            // If the key is found, remove the inventory
-            if (!EqualityComparer<ItemCategoryType>.Default.Equals(key, default))
+            if (contents.Contains(inventory)) //if not empty
             {
-                contents.Remove(key); //remove inventory 
+                contents.Remove(inventory); //remove inventory 
                 onCollectionChange?.Raise(); //notify subscribers 
             }
+        }
+
+        // Removes all inventories from the collection
+        public bool Clear()
+        {
+            contents.Clear();
+            onCollectionEmpty?.Raise();
+            return contents.Count == 0;
         }
     }
 }

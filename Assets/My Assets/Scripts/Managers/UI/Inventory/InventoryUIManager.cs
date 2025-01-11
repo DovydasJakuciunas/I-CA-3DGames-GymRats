@@ -1,92 +1,87 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using System.Collections.Generic;
 using GD.Items;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
-namespace GD.UI
+public class InventoryUIManager : MonoBehaviour
 {
-    public class UIInventoryManager : MonoBehaviour
+    [SerializeField] private Inventory playerInventory;
+    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject itemSlotPrefab;
+    [SerializeField] private Transform itemSlotContainer;
+    [SerializeField] private GameObject descriptionPanel;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+
+    private AudioSource audioSource;    //To play all types of dialogue based on the items name 
+
+    /*Explanation
+     * Similar working as UI sciprt, on our inventory gameobject in our canvas we put gameEventListener where we put in scriptableobject game event:  InventoryChangeEvent 
+     * and create response with dragging the inventory object there and adding InventortUIManager script and selecting OnInventoryChange method
+     * This will update inventory UI when inventory changes
+     * Then in playerInput  script we set the toggle on or off based on pressing key 
+     */
+
+    private void Start()
     {
-        #region Fields
+        // Hide the inventory panel at the start
+        inventoryPanel.SetActive(false);
+        descriptionPanel.SetActive(false);
+        UpdateInventoryUI();
+        audioSource = GetComponent<AudioSource>();
+    }
 
-        [SerializeField]
-        [Tooltip("Title of the inventory panel")]
-        [TextArea(2, 4)]
-        private string description;
+    public void OnInventoryChange()
+    {
+        UpdateInventoryUI();
+    }
 
-        [SerializeField]
-        [Tooltip("Inventory to display for this ui panel")]
-        private Inventory inventory;
-
-        [SerializeField]
-        [Tooltip("Panel to display inventory items in")]
-        private Transform itemUIPanel;
-
-        [SerializeField]
-        [Tooltip("Prefab for inventory item UI")]
-        private GameObject itemUIPrefab;
-
-        #endregion Fields
-
-        #region Fields - Internal
-
-        private Dictionary<ItemData, GameObject> itemUIDictionary = new Dictionary<ItemData, GameObject>();
-
-        #endregion Fields - Internal
-
-        #region Methods
-
-        private void Start()
+    private void UpdateInventoryUI()
+    {
+        //clear existing slots to avoid duplicates
+        foreach (Transform child in itemSlotContainer)
         {
-            if (inventory == null)
-                throw new System.Exception("Inventory is not set in UIInventoryManager");
-            if (itemUIPanel == null)
-                throw new System.Exception("ItemUIPanel is not set in UIInventoryManager");
-            if (itemUIPrefab == null)
-                throw new System.Exception("ItemUIPrefab is not set in UIInventoryManager");
-
-            InitializeUI();
+            Destroy(child.gameObject);
         }
 
-        private void InitializeUI()
+        //iterate through players inventory items 
+        foreach (KeyValuePair<ItemData, int> item in playerInventory)
         {
-            foreach (var itemEntry in inventory)
+            GameObject itemSlot = Instantiate(itemSlotPrefab, itemSlotContainer); //instantiate the item slot prefab with where to put it 
+            ItemSlot itemSlotUI = itemSlot.GetComponent<ItemSlot>(); //get the item slot UI component
+            itemSlotUI.SetItem(item.Key, item.Value); //set the item slot UI with the item and how many are in the inventory
+
+            Button button = itemSlot.GetComponent<Button>(); //get the button component of the item slot
+            if (button != null)
             {
-                CreateOrUpdate(itemEntry.Key, itemEntry.Value);
+                button.onClick.AddListener(() => OnItemClick(item.Key)); //add a listener to the button to call OnItemClick when clicked
             }
         }
+    }
 
-        private void CreateOrUpdate(ItemData itemData, int count)
+    public void ToggleInventoryPanel()
+    {
+        bool inInventory = !inventoryPanel.activeSelf; //check if the inventory panel is active or not
+        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+        UpdateInventoryUI(); //update the inventory UI when the panel is viewed
+
+        if (!inInventory)
         {
-            if (!itemUIDictionary.TryGetValue(itemData, out var itemUI))
-            {
-                itemUI = Instantiate(itemUIPrefab, itemUIPanel);
-                itemUI.SetActive(true);
-                itemUI.GetComponentInChildren<Image>().sprite = itemData.UiIcon;
-                itemUIDictionary[itemData] = itemUI;
-            }
-
-            var countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
-            countText.text = count.ToString();
+            descriptionPanel.SetActive(false); //if we close the inventory panel then close the description panel
         }
+    }
 
-        /// <summary>
-        /// Called when the inventory changes
-        /// </summary>
-        /// We could solve the update problem with
-        /// 1. Update
-        /// 2. HandleTicks (i.e, 0.1, 0.2, 0.4, 0.8)
-        /// 3. Persistent polling ("have you changed?")
-        /// 4. Event-driven ("I'll tell you when I change")
-        public void OnInventoryChange()
+    public void OnItemClick(ItemData item) //when we click on item (button) then show the panel
+    {
+        if (descriptionPanel != null && descriptionText != null)
         {
-            foreach (var itemEntry in inventory)
-            {
-                CreateOrUpdate(itemEntry.Key, itemEntry.Value);
-            }
+            descriptionText.text = item.Description; //set the description text to the item description
+            descriptionPanel.SetActive(true); //show the description panel
         }
+    }
 
-        #endregion Methods
+    public bool IsInventoryPanelActive() //check for in inventory state 
+    {
+        return inventoryPanel.activeSelf;
     }
 }

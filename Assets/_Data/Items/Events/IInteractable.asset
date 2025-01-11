@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: IInteractable
   m_EditorClassIdentifier: 
   name: Raise When the time is Interacted
-  description: Go for it
+  description: When player interacts with an object

@@ -50,11 +50,13 @@ namespace GD.Items
                 // Set the audio position to the transform position
                 itemData.AudioPosition = transform.position;
 
+
                 // Raise the event to notify listeners
                 onItemEvent?.Raise(itemData);
 
                 // Remove the item from the scene
                 Destroy(gameObject);
+                Debug.Log("Item Destroyed!");
             }
         }
 

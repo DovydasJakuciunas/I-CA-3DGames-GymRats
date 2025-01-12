@@ -4,8 +4,7 @@ using UnityEngine;
 
 //Code By Niall McGuinness
 
-namespace GD.Items
-{
+
     /// <summary>
     /// Stores all data for an item used when the item is consumed or picked up
     /// </summary>
@@ -56,4 +55,3 @@ namespace GD.Items
 
         #endregion Properties
     }
-}

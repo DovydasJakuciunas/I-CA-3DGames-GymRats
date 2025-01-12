@@ -5,8 +5,6 @@ using UnityEngine;
 //Used Niall McGuinness Code, https://github.com/nmcguinness/2024-25-GD3A-IntroToUnity/blob/4925c99ed50a84d14cf2764360d3a2936ce2be88/IntroToUnity/Assets/GD/Common/Scripts/Manager/Inventory/InventoryManager.cs
 //Refactored with this youtube tutorial: https://www.youtube.com/watch?v=LaQp5u0_UYk&list=PLSR2vNOypvs6eIxvTu-rYjw2Eyw57nZrU&index=2
 
-namespace GD.Items
-{
     /// <summary>
     /// Manages the players inventory, listens for events, etc.
     /// </summary>
@@ -70,4 +68,3 @@ namespace GD.Items
             inventoryCollection.Add(data);
         }
     }
-}

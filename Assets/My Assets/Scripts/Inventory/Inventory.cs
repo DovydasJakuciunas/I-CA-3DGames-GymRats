@@ -7,8 +7,7 @@ using UnityEngine;
 
 //Code By Niall McGuinness
 
-namespace GD.Items
-{
+
     /// <summary>
     /// Stores the amount of each object of type ItemData in the inventory.
     /// Think of an inventory like a pocket in a larger bag (or InventoryCollection).
@@ -150,4 +149,3 @@ namespace GD.Items
 
         #endregion Methods - IEnumerable Implementation
     }
-}

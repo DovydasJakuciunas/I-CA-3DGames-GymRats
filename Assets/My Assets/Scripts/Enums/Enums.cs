@@ -189,4 +189,15 @@ namespace GD.Types
         Resource
 
     }
+
+    /// <summary>
+    /// All interctable equipment types in the game
+
+    public enum GymEquipmentType :sbyte
+    {
+        GymMat,
+        ShoulderPress,
+        SitUps,
+        Squats
+    }
 }

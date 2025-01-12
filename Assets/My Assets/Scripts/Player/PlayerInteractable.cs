@@ -3,10 +3,10 @@ using UnityEngine;
 public class PlayerInteractable : MonoBehaviour
 {
     [SerializeField]
-    private LayerMask interactableLayer; // Define which objects are interactable  
+    private LayerMask interactableLayer;
 
     [SerializeField]
-    private float interactableRange = 2f; // Radius of interaction
+    private float interactableRange = 2f; // Range to detect interactables
 
     private void Update()
     {
@@ -16,12 +16,17 @@ public class PlayerInteractable : MonoBehaviour
         }
     }
 
+    public float getInteractableRange()
+    {
+        return interactableRange;
+    }
+
     private void Interact()
     {
         // Find all objects within the interactable range
         Collider[] colliders = Physics.OverlapSphere(transform.position, interactableRange, interactableLayer);
 
-        if (colliders.Length > 0) // If there are any objects in range
+        if (colliders.Length > 0)
         {
             // Select the closest interactable object
             Collider closestCollider = null;
@@ -40,11 +45,14 @@ public class PlayerInteractable : MonoBehaviour
             // Interact with the closest object
             if (closestCollider != null)
             {
-
                 var gymEquipment = closestCollider.GetComponent<GymEquipment>();
                 if (gymEquipment != null)
                 {
-                    gymEquipment.Interact();
+                    MiniGameManager.Instance.StartMiniGame(
+                        gymEquipment.GetMiniGamePrefab(),
+                        transform,
+                        interactableRange
+                    );
                 }
             }
         }

@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     private float savedSpeed; // Reset the speed to original speed after double click
     private bool isDoubleClicked = false; // Prevents multiple double clicks in turn speeding up the agent by each double click
 
-    private bool sphereActive = true; // Track sphere's state
     private Coroutine sphereCoroutine; // Handle the coroutine for sphere visibility
 
     #endregion

@@ -34,6 +34,7 @@ public class MiniGameSmash : MiniGame
         {
             HandleSmash(letterD, letterA);
         }
+        Debug.Log("Smash Count: " + smashCount);
     }
 
     private void HandleSmash(LetterTween pressedLetter, LetterTween nextLetter)

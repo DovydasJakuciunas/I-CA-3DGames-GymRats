@@ -18,7 +18,6 @@ public class MiniGameSmash : MiniGame
     public override void StartGame(System.Action<bool> onComplete)
     {
         this.onComplete = onComplete;
-        Debug.Log("Smash A+D started");
 
         // Start with letter A
         letterA?.StartTween();
@@ -29,12 +28,10 @@ public class MiniGameSmash : MiniGame
         // Check for input and trigger the corresponding tween
         if (isAPressed && Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log("A pressed");
             HandleSmash(letterA, letterD);
         }
         else if (!isAPressed && Input.GetKeyDown(KeyCode.D))
         {
-            Debug.Log("D pressed");
             HandleSmash(letterD, letterA);
         }
     }
@@ -42,7 +39,6 @@ public class MiniGameSmash : MiniGame
     private void HandleSmash(LetterTween pressedLetter, LetterTween nextLetter)
     {
         smashCount++;
-        Debug.Log($"Smash count: {smashCount}");
 
         // Stop the current animation and reset the pressed letter
         pressedLetter?.OnLetterPressed();
@@ -56,7 +52,6 @@ public class MiniGameSmash : MiniGame
         // Check if the game is completed
         if (smashCount >= targetCount)
         {
-            Debug.Log("Smash A+D completed!");
             onComplete?.Invoke(true);
             smashCount = 0;
 

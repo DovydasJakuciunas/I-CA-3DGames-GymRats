@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class StaminaManager : MonoBehaviour
@@ -31,6 +30,9 @@ public class StaminaManager : MonoBehaviour
             currentStamina -= stamina;
             staminaBar.SetStamina(currentStamina);
             Debug.Log("Stamina used: " + stamina);
+        }
+        else if (currentStamina <= 0) {
+            Debug.Log("Not enough stamina");
         }
     }
 }

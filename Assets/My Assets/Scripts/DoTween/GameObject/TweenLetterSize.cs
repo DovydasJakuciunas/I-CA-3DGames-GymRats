@@ -32,7 +32,6 @@ namespace GD.Tweens
 
             if (!isAnimating)
             {
-                Debug.Log($"Starting tween for {letter.name}");
                 isAnimating = true;
 
                 // Create a tween to shrink the letter
@@ -43,7 +42,6 @@ namespace GD.Tweens
                     .SetUpdate(true) // Ensure the tween respects unscaled time
                     .OnComplete(() =>
                     {
-                        Debug.Log($"Tween completed for {letter.name}");
                         isAnimating = false;
                     });
             }
@@ -56,7 +54,6 @@ namespace GD.Tweens
         {
             if (currentTween != null && currentTween.IsActive())
             {
-                Debug.Log($"Stopping tween for {letter.name}");
                 currentTween.Kill(); // Stop the current tween immediately
                 ResetLetter(); // Reset the letter to its original state
             }
@@ -69,7 +66,6 @@ namespace GD.Tweens
         {
             letter.localScale = Vector3.one * originalScale; // Reset the scale to the original size
             isAnimating = false;
-            Debug.Log($"Letter {letter.name} reset to original scale.");
         }
 
         /// <summary>
@@ -79,7 +75,6 @@ namespace GD.Tweens
         {
             if (isAnimating)
             {
-                Debug.Log($"Letter pressed: {letter.name}");
                 StopAnimation(); // Stop the current animation immediately
             }
         }

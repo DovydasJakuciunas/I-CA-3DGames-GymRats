@@ -7,7 +7,7 @@ public class MiniGameUIManager : MonoBehaviour
     private GameObject miniGameUI; // Reference to the mini-game UI object
 
     [SerializeField]
-    private TMP_Text titleText;
+    private TMP_Text titleText; // Text component for the mini-game title
 
     public static MiniGameUIManager Instance { get; private set; }
 
@@ -48,6 +48,10 @@ public class MiniGameUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Show the mini-game UI with the given title.
+    /// </summary>
+    /// <param name="title">The title to display on the mini-game UI.</param>
     public void ShowMiniGameUI(string title)
     {
         if (miniGameUI != null)
@@ -61,6 +65,9 @@ public class MiniGameUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hide the mini-game UI.
+    /// </summary>
     public void HideMiniGameUI()
     {
         if (miniGameUI != null)
@@ -69,21 +76,13 @@ public class MiniGameUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handle the mini-game completion event.
+    /// </summary>
+    /// <param name="success">Whether the mini-game was successfully completed.</param>
     private void HandleMiniGameComplete(bool success)
     {
-        Debug.Log($"Mini-game completed. Success: {success}");
-
         // Hide the mini-game UI after completion
         HideMiniGameUI();
-
-        // Add additional logic here, e.g., show success/failure messages
-        if (success)
-        {
-            Debug.Log("Congratulations! You completed the mini-game.");
-        }
-        else
-        {
-            Debug.Log("Better luck next time!");
-        }
     }
 }

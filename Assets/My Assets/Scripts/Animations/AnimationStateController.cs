@@ -12,10 +12,7 @@ public class AnimationStateController : MonoBehaviour
 
         // Find and assign the PlayerMovement component
         playerMovement = GetComponent<PlayerMovement>();
-        if (playerMovement == null)
-        {
-            Debug.LogError("PlayerMovement component not found on the GameObject.");
-        }
+        
     }
 
     // Update is called once per frame

@@ -40,7 +40,6 @@ public class PlayerInteractable : MonoBehaviour
             // Interact with the closest object
             if (closestCollider != null)
             {
-                Debug.Log("Interacting with " + closestCollider.name);
 
                 var gymEquipment = closestCollider.GetComponent<GymEquipment>();
                 if (gymEquipment != null)

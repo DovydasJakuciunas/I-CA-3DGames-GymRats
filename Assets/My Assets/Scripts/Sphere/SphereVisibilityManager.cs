@@ -11,7 +11,7 @@ public class SphereVisibilityManager
     private float delay;
 
     private bool sphereActive = true;
-    private Coroutine sphereCoroutine;
+    private Coroutine sphereCoroutine;  // Handle the coroutine for sphere visibility
     private MonoBehaviour monoBehaviourContext; // Context to run coroutines
 
     public SphereVisibilityManager(GameObject sphere, Transform playerTransform, NavMeshAgent playerAgent, MonoBehaviour monoBehaviourContext, float delay = 1f)

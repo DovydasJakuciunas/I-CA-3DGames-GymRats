@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInteractable : MonoBehaviour
 {
     [SerializeField]
-    private LayerMask interactableLayer;
+    private LayerMask interactableLayer; // Define which objects are interactable  
 
     [SerializeField]
-    private float interactableRange = 2f;
+    private float interactableRange = 2f; // Radius of interaction
 
     private void Update()
     {
@@ -20,18 +18,40 @@ public class PlayerInteractable : MonoBehaviour
 
     private void Interact()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactableRange, interactableLayer))
-        {
-            Debug.Log("Interacting with " + hit.collider.name);
+        // Find all objects within the interactable range
+        Collider[] colliders = Physics.OverlapSphere(transform.position, interactableRange, interactableLayer);
 
-            var gymEquipment = hit.collider.GetComponent<GymEquipment>();
-            if (gymEquipment != null)
+        if (colliders.Length > 0) // If there are any objects in range
+        {
+            // Select the closest interactable object
+            Collider closestCollider = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var collider in colliders)
             {
-                gymEquipment.Interact();
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestCollider = collider;
+                }
             }
+
+            // Interact with the closest object
+            if (closestCollider != null)
+            {
+                Debug.Log("Interacting with " + closestCollider.name);
+
+                var gymEquipment = closestCollider.GetComponent<GymEquipment>();
+                if (gymEquipment != null)
+                {
+                    gymEquipment.Interact();
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("No interactable objects in range.");
         }
     }
 }
-
-

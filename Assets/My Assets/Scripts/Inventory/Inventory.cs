@@ -115,6 +115,11 @@ public class Inventory : SerializedScriptableObject, IEnumerable<KeyValuePair<It
         return contents.ContainsKey(item);
     }
 
+    public Dictionary<ItemData, int> GetAllItems()
+    {
+        return contents;
+    }
+
     /// <summary>
     /// Removes all items from the inventory.
     /// </summary>

@@ -128,7 +128,7 @@ public class Inventory : SerializedScriptableObject, IEnumerable<KeyValuePair<It
     {
         contents.Clear();
         onInventoryClear?.Raise();
-        onInventoryChange?.Raise();
+
         return contents.Count == 0;
     }
 

@@ -24,6 +24,9 @@ public class InventoryUIManager : MonoBehaviour
     [Tooltip("Prefabs for inventory item UI (one prefab per new item)")]
     private List<GameObject> itemUIPrefabs;
 
+    [SerializeField]
+    private ItemData banana;
+
     #endregion Fields
 
     #region Fields - Internal
@@ -39,6 +42,8 @@ public class InventoryUIManager : MonoBehaviour
 
     private void Start()
     {
+        inventory.Clear();
+
         if (inventory == null)
         {
             throw new System.Exception("Inventory is not set in InventoryUIManager");

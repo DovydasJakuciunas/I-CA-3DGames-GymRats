@@ -30,6 +30,7 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         base.Awake(); // Call Singleton's Awake to handle instance initialization
 
+
         // Check if the inventory collection has been added
         if (inventoryCollection == null)
         {

@@ -95,4 +95,60 @@ using UnityEngine;
                 onCollectionChange?.Raise(); //notify subscribers 
             }
         }
+
+    /// <summary>
+    /// Removes one count of the specified item from the collection.
+    /// </summary>
+    /// <param name="itemData">The item to remove.</param>
+    /// <param name="quantity">The quantity to remove (default is 1).</param>
+    /// <returns>True if the item was successfully removed, false otherwise.</returns>
+    public bool RemoveOne(ItemData itemData, int quantity = 1)
+    {
+        // Check if the item category exists in the collection
+        if (!contents.ContainsKey(itemData.ItemCategory))
+        {
+            Debug.LogWarning("No inventory exists for the specified item category.");
+            return false;
+        }
+
+        // Get the inventory for the specified category
+        var inventory = contents[itemData.ItemCategory];
+
+        // Check if the inventory contains the item
+        if (!inventory.Contains(itemData))
+        {
+            Debug.LogWarning("The specified item does not exist in the inventory.");
+            return false;
+        }
+
+        // Get the current count of the item
+        int currentCount = inventory.Count(itemData);
+
+        // If the current count is less than or equal to the quantity to remove
+        if (currentCount <= quantity)
+        {
+            // Remove the item entirely
+            inventory.Remove(itemData,1);
+
+            // If the inventory is now empty, remove it from the collection
+            if (inventory.isEmpty())
+            {
+                Remove(inventory);
+            }
+
+            Debug.Log($"Item '{itemData.name}' fully removed from inventory.");
+        }
+        else
+        {
+            // Decrement the item count
+            inventory.Add(itemData, -quantity);
+            Debug.Log($"Removed {quantity} of item '{itemData.name}'. Remaining count: {currentCount - quantity}.");
+        }
+
+        // Notify listeners that the collection has changed
+        onCollectionChange?.Raise();
+
+        return true;
     }
+
+}

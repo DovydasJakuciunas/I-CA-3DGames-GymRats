@@ -8,13 +8,13 @@ public class InventoryItemSlotUIManager
 {
     private Transform itemUIPanel;
     private GameObject selectedItemUI;
-
     private GameObject spotLightItem;
     private GameObject itemDescriptionName;
     private GameObject itemDescription;
     private GameObject player; // Reference to the player
+    private Inventory inventoryCollection; // Reference to the inventory collection
 
-    public InventoryItemSlotUIManager(Transform panel, GameObject selectedItemUI, GameObject spotLightItem, GameObject itemDescriptionName, GameObject itemDescription, GameObject player)
+    public InventoryItemSlotUIManager(Transform panel, GameObject selectedItemUI, GameObject spotLightItem, GameObject itemDescriptionName, GameObject itemDescription, GameObject player, Inventory inventoryCollection)
     {
         this.itemUIPanel = panel;
         this.selectedItemUI = selectedItemUI;
@@ -22,6 +22,7 @@ public class InventoryItemSlotUIManager
         this.itemDescriptionName = itemDescriptionName;
         this.itemDescription = itemDescription;
         this.player = player;
+        this.inventoryCollection = inventoryCollection;
 
         if (selectedItemUI != null)
         {
@@ -74,29 +75,41 @@ public class InventoryItemSlotUIManager
     /// <summary>
     /// Consumes the specified item and removes it from the UI.
     /// </summary>
+    /// <summary>
+    /// Consumes the specified item and removes one count from the inventory.
+    /// </summary>
     private void ConsumeItem(GameObject itemUI)
     {
-        if (player == null)
-        {
-            Debug.LogError("Player reference is missing!");
-            return;
-        }
-
-        var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
+        var itemComponent = itemUI.GetComponent<Item>();
         if (itemComponent != null && itemComponent.itemData != null)
         {
-            // Call the Consume method on the item
+            // Call the Consume method
             itemComponent.Consume(player);
 
-            // Remove the item from the UI
-            Object.Destroy(itemUI); // Destroy the item UI GameObject
-            Debug.Log($"Item '{itemComponent.itemData.name}' consumed!");
+            // Remove one count of the item from the inventory
+            int remainingCount = inventoryCollection.Remove(itemComponent.itemData, 1);
+
+            // Update the UI or destroy the item if the count is 0
+            var countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
+            if (countText != null)
+            {
+                if (remainingCount > 0)
+                {
+                    countText.text = remainingCount.ToString();
+                }
+                else
+                {
+                    // If the item count reaches 0, remove the item UI
+                    Object.Destroy(itemUI);
+                }
+            }
         }
         else
         {
             Debug.LogError("Item component or ItemData is missing on the item UI.");
         }
     }
+
 
     /// <summary>
     /// Toggles the selection state of an item.

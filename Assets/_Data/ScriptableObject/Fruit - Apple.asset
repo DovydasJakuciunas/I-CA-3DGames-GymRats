@@ -18,4 +18,5 @@ MonoBehaviour:
   itemType: 4
   uiIcon: {fileID: -6367837219966448765, guid: 375a132719b8f114aadcfda6bf62f8b1, type: 3}
   audioClip: {fileID: 8300000, guid: c9c0a5d2c36c2c845ad43a3e06a33707, type: 3}
-  audioPosition: {x: -5.3697996, y: 2.543519, z: 5.1921005}
+  audioPosition: {x: 45.19, y: 6.562, z: 51.823055}
+  itemValue: 10

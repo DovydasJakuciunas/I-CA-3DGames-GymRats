@@ -51,10 +51,6 @@ public class InventoryUIManager : MonoBehaviour
     private Dictionary<ItemData, GameObject> itemUIDictionary = new Dictionary<ItemData, GameObject>();
     private List<InventoryItemSlotUIManager> itemSlotManagers = new List<InventoryItemSlotUIManager>();
 
-    #endregion Fields - Internal
-
-    #region Methods
-
     private void Start()
     {
         if (inventory == null)
@@ -80,13 +76,14 @@ public class InventoryUIManager : MonoBehaviour
         // Initialize slot managers for each panel
         for (int i = 0; i < itemUIPanels.Count; i++)
         {
-            InventoryItemSlotUIManager slotManager = new InventoryItemSlotUIManager(
+            var slotManager = new InventoryItemSlotUIManager(
                 itemUIPanels[i],
                 selectedItemUI,
                 spotLightItem,
                 itemDescriptionName,
                 itemDescription,
-                player
+                player,
+                inventory
             );
             itemSlotManagers.Add(slotManager);
         }

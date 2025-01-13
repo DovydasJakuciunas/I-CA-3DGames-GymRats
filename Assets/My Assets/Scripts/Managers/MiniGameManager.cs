@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniGameManager : MonoBehaviour
@@ -9,6 +10,10 @@ public class MiniGameManager : MonoBehaviour
     private StaminaManager stamina;
 
     private MiniGame currentMiniGame;
+
+    // A list to manage all workout UIs
+    [SerializeField]
+    private List<GameObject> workoutUIs = new List<GameObject>();
 
     // Event to notify listeners about mini-game completion
     public event Action<bool> OnMiniGameCompleted;
@@ -35,10 +40,23 @@ public class MiniGameManager : MonoBehaviour
             return;
         }
 
+        Debug.Log("Attempting to start the mini-game...");
+
+
+        // Check if the player has enough stamina to start the mini-game
+        if (stamina.currentStamina < miniGamePrefab.StaminaCost)
+        {
+            Debug.Log($"Not enough stamina to start the mini-game. Required: {miniGamePrefab.StaminaCost}, Current: {stamina.currentStamina}");
+            return;
+        }
+
         if (currentMiniGame != null)
         {
             Destroy(currentMiniGame.gameObject); // Destroy the existing instance
         }
+
+        // Deactivate all workout UIs except the one assigned to the current mini-game
+        DeactivateAllWorkoutUIs(miniGamePrefab);
 
         // Activate the mini-game
         Time.timeScale = 0f; // Pause the game
@@ -58,7 +76,12 @@ public class MiniGameManager : MonoBehaviour
 
         if (success)
         {
-            stamina.UseStamina(30);
+            if (currentMiniGame != null)
+            {
+                // Deduct stamina based on the specific mini-game
+                stamina.UseStamina(currentMiniGame.StaminaCost);
+                Debug.Log($"Stamina reduced by {currentMiniGame.StaminaCost} for {currentMiniGame.GetType().Name}.");
+            }
         }
 
         // Hide the mini-game UI and clean up the current mini-game
@@ -68,6 +91,18 @@ public class MiniGameManager : MonoBehaviour
         {
             Destroy(currentMiniGame.gameObject);
             currentMiniGame = null;
+        }
+    }
+
+    private void DeactivateAllWorkoutUIs(MiniGame activeMiniGame)
+    {
+        foreach (GameObject workoutUI in workoutUIs)
+        {
+            if (workoutUI != null)
+            {
+                // Only activate the workout UI associated with the current mini-game
+                workoutUI.SetActive(workoutUI.name == activeMiniGame.name);
+            }
         }
     }
 }

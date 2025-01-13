@@ -138,6 +138,11 @@ public class Inventory : SerializedScriptableObject, IEnumerable<KeyValuePair<It
         onInventoryChange?.Raise();
     }
 
+    public bool isEmpty()
+    {
+        return contents.Count == 0;
+    }
+
     #region Methods - IEnumerable Implementation
 
     public IEnumerator<KeyValuePair<ItemData, int>> GetEnumerator()

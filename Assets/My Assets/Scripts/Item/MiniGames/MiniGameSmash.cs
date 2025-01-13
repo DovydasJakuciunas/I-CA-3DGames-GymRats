@@ -7,11 +7,15 @@ public class MiniGameSmash : MiniGame
     private int targetCount = 10;
     private System.Action<bool> onComplete;
 
+    public override int StaminaCost => 30; 
+
     [SerializeField]
     private LetterTween letterA;
 
     [SerializeField]
     private LetterTween letterD;
+
+
 
     private bool isAPressed = true;
 

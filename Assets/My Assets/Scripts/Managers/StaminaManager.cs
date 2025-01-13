@@ -12,22 +12,12 @@ public class StaminaManager : MonoBehaviour
         staminaBar.SetMaxStamina(maxStamina);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Space pressed");
-            UseStamina(10);
-        }
-    }
-
     public void UseStamina(int stamina)
     {
         if (currentStamina - stamina >= 0)
         {
             currentStamina -= stamina;
             staminaBar.SetStamina(currentStamina);
-            Debug.Log("Stamina used: " + stamina);
         }
         else
         {

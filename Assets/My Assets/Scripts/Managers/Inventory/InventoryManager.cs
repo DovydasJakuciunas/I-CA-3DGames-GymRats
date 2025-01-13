@@ -69,7 +69,6 @@ public class InventoryManager : Singleton<InventoryManager>
     /// <param name="data">The item data to add to the inventory.</param>
     public void OnInventoryAdd(ItemData data)
     {
-        Debug.Log("Adding item to inventory: " + data.name);
         inventoryCollection.Add(data);
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fruit - Apple
   m_EditorClassIdentifier: 
   name: Apple
-  description: Restores 10 stamina when consumed.
+  description: Restores 10 Stamina when consumed.
   itemCategory: 1
   itemType: 4
   uiIcon: {fileID: -6367837219966448765, guid: 375a132719b8f114aadcfda6bf62f8b1, type: 3}

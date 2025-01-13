@@ -2,13 +2,14 @@ using GD.Items;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryItemSlotUIManager
 {
     private Transform itemUIPanel;
     private GameObject selectedItemUI;
-    private HashSet<GameObject> selectedItems = new HashSet<GameObject>();
+    private GameObject player;
 
     private GameObject spotLightItem;
     private GameObject itemDescriptionName;
@@ -28,30 +29,82 @@ public class InventoryItemSlotUIManager
         }
     }
 
-    /// <summary>
-    /// Adds an item UI to this panel.
-    /// </summary>
-    public GameObject AddItem(GameObject itemUIPrefab)
+    
+
+// ...
+
+/// <summary>
+/// Adds an item UI to this panel.
+/// </summary>
+public GameObject AddItem(GameObject itemUIPrefab)
+{
+    GameObject itemUI = Object.Instantiate(itemUIPrefab, itemUIPanel);
+
+    // Ensure a Button component exists and add a listener for left-click
+    var button = itemUI.GetComponent<Button>();
+    if (button == null)
     {
-        GameObject itemUI = Object.Instantiate(itemUIPrefab, itemUIPanel);
-
-        // Ensure a Button component exists and add a listener
-        var button = itemUI.GetComponent<Button>();
-        if (button == null)
-        {
-            button = itemUI.AddComponent<Button>();
-        }
-
-        // Add a click listener to toggle selection
-        button.onClick.AddListener(() => ToggleSelection(itemUI));
-
-        return itemUI;
+        button = itemUI.AddComponent<Button>();
     }
 
+    button.onClick.AddListener(() => ToggleSelection(itemUI)); // Handle left-click for selection
+
+    // Add an EventTrigger to detect right-click
+    var eventTrigger = itemUI.GetComponent<EventTrigger>();
+    if (eventTrigger == null)
+    {
+        eventTrigger = itemUI.AddComponent<EventTrigger>();
+    }
+
+    // Add a new entry for right-click
+    var rightClickEntry = new EventTrigger.Entry
+    {
+        eventID = EventTriggerType.PointerClick
+    };
+    rightClickEntry.callback.AddListener((eventData) =>
+    {
+        var pointerEventData = eventData as PointerEventData;
+        if (pointerEventData != null && pointerEventData.button == PointerEventData.InputButton.Right)
+        {
+            ConsumeItem(itemUI); // Call ConsumeItem when right-clicked
+        }
+    });
+
+    eventTrigger.triggers.Add(rightClickEntry);
+
+    return itemUI;
+}
+
     /// <summary>
-    /// Toggles the selection state of an item.
-    /// </summary>
-    private void ToggleSelection(GameObject itemUI)
+/// Consumes the specified item and removes it from the UI.
+/// </summary>
+private void ConsumeItem(GameObject itemUI)
+{
+    var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
+    if (itemComponent != null && itemComponent.itemData != null)
+    {
+        // Call the Consume method on the item
+        itemComponent.Consume(player); 
+
+        
+        
+
+        // Remove the item from the UI
+        Object.Destroy(itemUI); // Destroy the item UI GameObject
+        Debug.Log($"Item '{itemComponent.itemData.name}' consumed!");
+    }
+    else
+    {
+        Debug.LogError("Item component or ItemData is missing on the item UI.");
+    }
+}
+
+
+
+/// <summary>
+/// Toggles the selection state of an item.
+/// </summary>
+private void ToggleSelection(GameObject itemUI)
     {
         SelectItem(itemUI);
     }
@@ -82,6 +135,11 @@ public class InventoryItemSlotUIManager
             selectedUIRectTransform.SetSiblingIndex(itemRectTransform.GetSiblingIndex() - 1);
         }
 
+        UpdateRightSide(itemUI);
+    }
+
+    private void UpdateRightSide(GameObject itemUI)
+    {
         // Update the UI with details from the selected item
         var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
         if (itemComponent != null && itemComponent.itemData != null)

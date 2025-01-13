@@ -22,16 +22,16 @@ public class InventoryUIManager : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Selected Item UI for displaying item details")]
-    private GameObject selectedItemUI; 
+    private GameObject selectedItemUI;
 
     [SerializeField]
-    [Tooltip("The inventory item in hierachy")]
+    [Tooltip("The inventory item in hierarchy")]
     private GameObject inventoryItem;
 
-
     #endregion Fields
+
     [SerializeField]
-    [Tooltip("Item Hightlight on the right")]
+    [Tooltip("Item Highlight on the right")]
     private GameObject spotLightItem;
 
     [SerializeField]
@@ -71,7 +71,7 @@ public class InventoryUIManager : MonoBehaviour
         // Initialize slot managers for each panel
         for (int i = 0; i < itemUIPanels.Count; i++)
         {
-            var slotManager = new InventoryItemSlotUIManager(
+            InventoryItemSlotUIManager slotManager = new InventoryItemSlotUIManager(
                 itemUIPanels[i],
                 selectedItemUI,
                 spotLightItem,
@@ -87,10 +87,9 @@ public class InventoryUIManager : MonoBehaviour
         inventoryItem.SetActive(false);
     }
 
-
     private void InitializeUI()
     {
-        foreach (var itemEntry in inventory.GetAllItems())
+        foreach (KeyValuePair<ItemData, int> itemEntry in inventory.GetAllItems())
         {
             CreateOrUpdate(itemEntry.Key, itemEntry.Value);
         }
@@ -98,44 +97,55 @@ public class InventoryUIManager : MonoBehaviour
 
     private void CreateOrUpdate(ItemData itemData, int count)
     {
-        if (!itemUIDictionary.TryGetValue(itemData, out var itemUI))
+        if (itemUIDictionary.TryGetValue(itemData, out GameObject itemUI))
         {
-            InventoryItemSlotUIManager slotManager = itemSlotManagers[itemUIDictionary.Count % itemSlotManagers.Count];
-            var itemUIPrefab = itemUIPrefabs[itemUIDictionary.Count % itemUIPrefabs.Count];
-
-            itemUI = slotManager.AddItem(itemUIPrefab);
             if (itemUI == null)
             {
-                Debug.LogError($"Failed to add item UI for {itemData.name}");
-                return;
-            }
-
-            itemUI.SetActive(true);
-
-            var iconImage = itemUI.GetComponentInChildren<Image>();
-            if (iconImage != null)
-            {
-                iconImage.sprite = itemData.UiIcon;
+                // The item UI has been destroyed, remove it from the dictionary
+                itemUIDictionary.Remove(itemData);
             }
             else
             {
-                Debug.LogError($"Image component not found in prefab for {itemData.name}.");
+                UpdateCount(count, itemUI);
+                return;
             }
-
-            // Attach Item component and assign ItemData
-            var itemComponent = itemUI.AddComponent<Item>();
-            itemComponent.itemData = itemData;
-
-            itemUIDictionary[itemData] = itemUI;
         }
 
-        UpateCount(count, itemUI);
+        // Create a new item UI if it doesn't exist or was destroyed
+        InventoryItemSlotUIManager slotManager = itemSlotManagers[itemUIDictionary.Count % itemSlotManagers.Count];
+        GameObject itemUIPrefab = itemUIPrefabs[itemUIDictionary.Count % itemUIPrefabs.Count];
+
+        itemUI = slotManager.AddItem(itemUIPrefab);
+        if (itemUI == null)
+        {
+            Debug.LogError($"Failed to add item UI for {itemData.name}");
+            return;
+        }
+
+        itemUI.SetActive(true);
+
+        Image iconImage = itemUI.GetComponentInChildren<Image>();
+        if (iconImage != null)
+        {
+            iconImage.sprite = itemData.UiIcon;
+        }
+        else
+        {
+            Debug.LogError($"Image component not found in prefab for {itemData.name}.");
+        }
+
+        // Attach Item component and assign ItemData
+        Item itemComponent = itemUI.AddComponent<Item>();
+        itemComponent.itemData = itemData;
+
+        itemUIDictionary[itemData] = itemUI;
     }
 
-    private static void UpateCount(int count, GameObject itemUI)
+
+    private static void UpdateCount(int count, GameObject itemUI)
     {
         // Update item count text
-        var countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
         if (countText != null)
         {
             countText.text = count.ToString();
@@ -148,7 +158,7 @@ public class InventoryUIManager : MonoBehaviour
 
     public void OnInventoryChange()
     {
-        foreach (var itemEntry in inventory.GetAllItems())
+        foreach (KeyValuePair<ItemData, int> itemEntry in inventory.GetAllItems())
         {
             CreateOrUpdate(itemEntry.Key, itemEntry.Value);
         }

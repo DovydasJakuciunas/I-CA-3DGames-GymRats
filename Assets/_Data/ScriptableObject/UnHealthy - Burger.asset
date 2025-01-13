@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UnHealthy - Burger
   m_EditorClassIdentifier: 
   name: Burger
-  description: Stamin -25 when consumed
+  description: Decrease -25 Stamina when consumed.
   itemCategory: 0
   itemType: 4
   uiIcon: {fileID: 21300000, guid: 79042c13debeb044796be3b9aabbc85f, type: 3}

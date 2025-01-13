@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fruit - Banana
   m_EditorClassIdentifier: 
   name: Banana
-  description: Restore 50 Stamina when consumed
+  description: Restores 50 Stamina when consumed.
   itemCategory: 0
   itemType: 4
   uiIcon: {fileID: -3989417037294542392, guid: dc095ce8d2086f541bd26c7e3a71ef12, type: 3}

@@ -37,7 +37,6 @@ namespace GD.Items
                 itemData.AudioPosition = transform.position;
                 onItemEvent?.Raise(itemData);
                 Destroy(gameObject);
-                Debug.Log("Item Destroyed!");
             }
         }
     }

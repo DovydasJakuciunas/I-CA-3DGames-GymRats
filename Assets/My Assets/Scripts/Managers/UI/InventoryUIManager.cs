@@ -1,3 +1,4 @@
+using GD.Items;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,11 +7,6 @@ using UnityEngine.UI;
 public class InventoryUIManager : MonoBehaviour
 {
     #region Fields
-
-    [SerializeField]
-    [Tooltip("Title of the inventory panel")]
-    [TextArea(2, 4)]
-    private string description;
 
     [SerializeField]
     [Tooltip("Inventory to display for this UI panel")]
@@ -25,16 +21,31 @@ public class InventoryUIManager : MonoBehaviour
     private List<GameObject> itemUIPrefabs;
 
     [SerializeField]
-    private ItemData banana;
+    [Tooltip("Selected Item UI for displaying item details")]
+    private GameObject selectedItemUI; 
+
+    [SerializeField]
+    [Tooltip("The inventory item in hierachy")]
+    private GameObject inventoryItem;
+
 
     #endregion Fields
+    [SerializeField]
+    [Tooltip("Item Hightlight on the right")]
+    private GameObject spotLightItem;
+
+    [SerializeField]
+    [Tooltip("Name of the highlighted item")]
+    private GameObject itemDescriptionName;
+
+    [SerializeField]
+    [Tooltip("Description of the highlighted item")]
+    private GameObject itemDescription;
 
     #region Fields - Internal
 
     private Dictionary<ItemData, GameObject> itemUIDictionary = new Dictionary<ItemData, GameObject>();
     private List<InventoryItemSlotUIManager> itemSlotManagers = new List<InventoryItemSlotUIManager>();
-    private int currentPanelIndex = 0;
-    private int currentPrefabIndex = 0;
 
     #endregion Fields - Internal
 
@@ -42,29 +53,40 @@ public class InventoryUIManager : MonoBehaviour
 
     private void Start()
     {
-        inventory.Clear();
-
         if (inventory == null)
         {
             throw new System.Exception("Inventory is not set in InventoryUIManager");
         }
+
         if (itemUIPanels == null || itemUIPanels.Count == 0)
         {
             throw new System.Exception("ItemUIPanels are not set in InventoryUIManager");
         }
+
         if (itemUIPrefabs == null || itemUIPrefabs.Count == 0)
         {
             throw new System.Exception("ItemUIPrefabs are not set in InventoryUIManager");
         }
 
         // Initialize slot managers for each panel
-        foreach (var panel in itemUIPanels)
+        for (int i = 0; i < itemUIPanels.Count; i++)
         {
-            itemSlotManagers.Add(new InventoryItemSlotUIManager(panel));
+            var slotManager = new InventoryItemSlotUIManager(
+                itemUIPanels[i],
+                selectedItemUI,
+                spotLightItem,
+                itemDescriptionName,
+                itemDescription
+            );
+            itemSlotManagers.Add(slotManager);
         }
 
+        inventory.Clear();
+
         InitializeUI();
+        inventoryItem.SetActive(false);
     }
+
 
     private void InitializeUI()
     {
@@ -78,9 +100,8 @@ public class InventoryUIManager : MonoBehaviour
     {
         if (!itemUIDictionary.TryGetValue(itemData, out var itemUI))
         {
-            // Assign the item to the next available panel
-            InventoryItemSlotUIManager slotManager = itemSlotManagers[currentPanelIndex];
-            var itemUIPrefab = itemUIPrefabs[currentPrefabIndex];
+            InventoryItemSlotUIManager slotManager = itemSlotManagers[itemUIDictionary.Count % itemSlotManagers.Count];
+            var itemUIPrefab = itemUIPrefabs[itemUIDictionary.Count % itemUIPrefabs.Count];
 
             itemUI = slotManager.AddItem(itemUIPrefab);
             if (itemUI == null)
@@ -91,7 +112,6 @@ public class InventoryUIManager : MonoBehaviour
 
             itemUI.SetActive(true);
 
-            // Set item icon
             var iconImage = itemUI.GetComponentInChildren<Image>();
             if (iconImage != null)
             {
@@ -102,14 +122,18 @@ public class InventoryUIManager : MonoBehaviour
                 Debug.LogError($"Image component not found in prefab for {itemData.name}.");
             }
 
-            // Add item UI to dictionary
-            itemUIDictionary[itemData] = itemUI;
+            // Attach Item component and assign ItemData
+            var itemComponent = itemUI.AddComponent<Item>();
+            itemComponent.itemData = itemData;
 
-            // Move to the next panel and prefab, cycling back if necessary
-            currentPanelIndex = (currentPanelIndex + 1) % itemSlotManagers.Count;
-            currentPrefabIndex = (currentPrefabIndex + 1) % itemUIPrefabs.Count;
+            itemUIDictionary[itemData] = itemUI;
         }
 
+        UpateCount(count, itemUI);
+    }
+
+    private static void UpateCount(int count, GameObject itemUI)
+    {
         // Update item count text
         var countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
         if (countText != null)
@@ -122,10 +146,6 @@ public class InventoryUIManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called when the inventory changes.
-    /// Updates the UI dynamically to reflect inventory changes.
-    /// </summary>
     public void OnInventoryChange()
     {
         foreach (var itemEntry in inventory.GetAllItems())

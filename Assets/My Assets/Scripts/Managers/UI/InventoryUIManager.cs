@@ -76,7 +76,7 @@ public class InventoryUIManager : MonoBehaviour
         // Initialize slot managers for each panel
         for (int i = 0; i < itemUIPanels.Count; i++)
         {
-            var slotManager = new InventoryItemSlotUIManager(
+            InventoryItemSlotUIManager slotManager = new InventoryItemSlotUIManager(
                 itemUIPanels[i],
                 selectedItemUI,
                 spotLightItem,

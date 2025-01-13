@@ -38,7 +38,7 @@ public class InventoryItemSlotUIManager
         GameObject itemUI = Object.Instantiate(itemUIPrefab, itemUIPanel);
 
         // Ensure a Button component exists and add a listener for left-click
-        var button = itemUI.GetComponent<Button>();
+        Button button = itemUI.GetComponent<Button>();
         if (button == null)
         {
             button = itemUI.AddComponent<Button>();
@@ -47,20 +47,20 @@ public class InventoryItemSlotUIManager
         button.onClick.AddListener(() => ToggleSelection(itemUI)); // Handle left-click for selection
 
         // Add an EventTrigger to detect right-click
-        var eventTrigger = itemUI.GetComponent<EventTrigger>();
+        EventTrigger eventTrigger = itemUI.GetComponent<EventTrigger>();
         if (eventTrigger == null)
         {
             eventTrigger = itemUI.AddComponent<EventTrigger>();
         }
 
         // Add a new entry for right-click
-        var rightClickEntry = new EventTrigger.Entry
+        EventTrigger.Entry rightClickEntry = new EventTrigger.Entry
         {
             eventID = EventTriggerType.PointerClick
         };
         rightClickEntry.callback.AddListener((eventData) =>
         {
-            var pointerEventData = eventData as PointerEventData;
+            PointerEventData pointerEventData = eventData as PointerEventData;
             if (pointerEventData != null && pointerEventData.button == PointerEventData.InputButton.Right)
             {
                 ConsumeItem(itemUI); // Call ConsumeItem when right-clicked
@@ -73,14 +73,11 @@ public class InventoryItemSlotUIManager
     }
 
     /// <summary>
-    /// Consumes the specified item and removes it from the UI.
-    /// </summary>
-    /// <summary>
     /// Consumes the specified item and removes one count from the inventory.
     /// </summary>
     private void ConsumeItem(GameObject itemUI)
     {
-        var itemComponent = itemUI.GetComponent<Item>();
+        Item itemComponent = itemUI.GetComponent<Item>();
         if (itemComponent != null && itemComponent.itemData != null)
         {
             // Call the Consume method
@@ -90,7 +87,7 @@ public class InventoryItemSlotUIManager
             int remainingCount = inventoryCollection.Remove(itemComponent.itemData, 1);
 
             // Update the UI or destroy the item if the count is 0
-            var countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI countText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
             if (countText != null)
             {
                 if (remainingCount > 0)
@@ -109,7 +106,6 @@ public class InventoryItemSlotUIManager
             Debug.LogError("Item component or ItemData is missing on the item UI.");
         }
     }
-
 
     /// <summary>
     /// Toggles the selection state of an item.
@@ -153,11 +149,11 @@ public class InventoryItemSlotUIManager
     /// </summary>
     private void UpdateRightSide(GameObject itemUI)
     {
-        var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
+        Item itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
         if (itemComponent != null && itemComponent.itemData != null)
         {
             // Update spotlight sprite
-            var spotLightImage = spotLightItem?.GetComponent<Image>();
+            Image spotLightImage = spotLightItem?.GetComponent<Image>();
             if (spotLightImage != null && itemComponent.itemData.UiIcon != null)
             {
                 spotLightImage.sprite = itemComponent.itemData.UiIcon; // Set the item's icon
@@ -165,14 +161,14 @@ public class InventoryItemSlotUIManager
             }
 
             // Update item name text
-            var nameText = itemDescriptionName?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI nameText = itemDescriptionName?.GetComponent<TextMeshProUGUI>();
             if (nameText != null)
             {
                 nameText.text = itemComponent.itemData.name; // Set the item's name
             }
 
             // Update item description text
-            var descriptionText = itemDescription?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI descriptionText = itemDescription?.GetComponent<TextMeshProUGUI>();
             if (descriptionText != null)
             {
                 descriptionText.text = itemComponent.itemData.Description; // Set the item's description

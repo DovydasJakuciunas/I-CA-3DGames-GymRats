@@ -25,7 +25,7 @@ MonoBehaviour:
     - Name: contents
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[GD.Types.ItemCategoryType,
-        Assembly-CSharp],[GD.Items.Inventory, Assembly-CSharp]], mscorlib
+        Assembly-CSharp],[Inventory, Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.SByteEnumEqualityComparer`1[[GD.Types.ItemCategoryType,

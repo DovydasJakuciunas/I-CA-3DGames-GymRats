@@ -1,7 +1,8 @@
+using GD;
 using TMPro;
 using UnityEngine;
 
-public class MiniGameUIManager : MonoBehaviour
+public class MiniGameUIManager : Singleton<MiniGameUIManager>
 {
     [SerializeField]
     private GameObject miniGameUI; // Reference to the mini-game UI object
@@ -9,19 +10,10 @@ public class MiniGameUIManager : MonoBehaviour
     [SerializeField]
     private TMP_Text titleText; // Text component for the mini-game title
 
-    public static MiniGameUIManager Instance { get; private set; }
-
-    private void Awake()
+    protected override void Awake()
     {
-        // Ensure this is a singleton
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Call base Singleton's Awake to handle instance initialization
+        base.Awake();
 
         // Disable the mini-game UI at the start
         if (miniGameUI != null)

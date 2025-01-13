@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Decrease -25 Stamina when consumed.
   itemCategory: 0
   itemType: 4
-  uiIcon: {fileID: 21300000, guid: 79042c13debeb044796be3b9aabbc85f, type: 3}
+  uiIcon: {fileID: 21300000, guid: aeb6280eb006e554ab6b3df1a419c57c, type: 3}
   audioClip: {fileID: 8300000, guid: c9c0a5d2c36c2c845ad43a3e06a33707, type: 3}
-  audioPosition: {x: -6.75, y: 2.683, z: 8.96}
-  itemValue: 0
+  audioPosition: {x: 61.39128, y: 7.515414, z: 54.143055}
+  itemValue: -25

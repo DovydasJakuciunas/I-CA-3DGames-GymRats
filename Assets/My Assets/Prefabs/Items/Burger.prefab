@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7141165897949445891}
   - component: {fileID: 3121817011052411277}
   - component: {fileID: 4180785575548633840}
+  - component: {fileID: 8575648369393068132}
+  - component: {fileID: 5134401039533360550}
   m_Layer: 8
   m_Name: Burger
   m_TagString: Untagged
@@ -123,3 +125,47 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &8575648369393068132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305243970583740605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8892b20ef113d2458a64b85d8496b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabledOnStart: 1
+  durationSecs: 2
+  delaySecs: 0
+  easeFunction: 1
+  loopCount: 100
+  loopType: 1
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  positionDelta: {x: 0, y: 1, z: 0}
+--- !u!114 &5134401039533360550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305243970583740605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 282ac0aba52ab1f4783664ad77ee79f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabledOnStart: 1
+  durationSecs: 2
+  delaySecs: 0
+  easeFunction: 1
+  loopCount: 100
+  loopType: 1
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  rotationAngleTarget: {x: 0, y: 180, z: 0}

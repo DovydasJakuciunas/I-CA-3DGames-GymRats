@@ -28,8 +28,6 @@ public class InventoryUIManager : MonoBehaviour
     [Tooltip("The inventory item in hierarchy")]
     private GameObject inventoryItem;
 
-    #endregion Fields
-
     [SerializeField]
     [Tooltip("Item Highlight on the right")]
     private GameObject spotLightItem;
@@ -41,6 +39,12 @@ public class InventoryUIManager : MonoBehaviour
     [SerializeField]
     [Tooltip("Description of the highlighted item")]
     private GameObject itemDescription;
+
+    [SerializeField]
+    [Tooltip("Reference to the player")]
+    private GameObject player;
+
+    #endregion Fields
 
     #region Fields - Internal
 
@@ -68,6 +72,11 @@ public class InventoryUIManager : MonoBehaviour
             throw new System.Exception("ItemUIPrefabs are not set in InventoryUIManager");
         }
 
+        if (player == null)
+        {
+            throw new System.Exception("Player is not set in InventoryUIManager");
+        }
+
         // Initialize slot managers for each panel
         for (int i = 0; i < itemUIPanels.Count; i++)
         {
@@ -76,7 +85,8 @@ public class InventoryUIManager : MonoBehaviour
                 selectedItemUI,
                 spotLightItem,
                 itemDescriptionName,
-                itemDescription
+                itemDescription,
+                player
             );
             itemSlotManagers.Add(slotManager);
         }
@@ -140,7 +150,6 @@ public class InventoryUIManager : MonoBehaviour
 
         itemUIDictionary[itemData] = itemUI;
     }
-
 
     private static void UpdateCount(int count, GameObject itemUI)
     {

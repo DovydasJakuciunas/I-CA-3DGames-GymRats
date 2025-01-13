@@ -1,5 +1,4 @@
 using GD.Items;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,19 +8,20 @@ public class InventoryItemSlotUIManager
 {
     private Transform itemUIPanel;
     private GameObject selectedItemUI;
-    private GameObject player;
 
     private GameObject spotLightItem;
     private GameObject itemDescriptionName;
     private GameObject itemDescription;
+    private GameObject player; // Reference to the player
 
-    public InventoryItemSlotUIManager(Transform panel, GameObject selectedItemUI, GameObject spotLightItem, GameObject itemDescriptionName, GameObject itemDescription)
+    public InventoryItemSlotUIManager(Transform panel, GameObject selectedItemUI, GameObject spotLightItem, GameObject itemDescriptionName, GameObject itemDescription, GameObject player)
     {
         this.itemUIPanel = panel;
         this.selectedItemUI = selectedItemUI;
         this.spotLightItem = spotLightItem;
         this.itemDescriptionName = itemDescriptionName;
         this.itemDescription = itemDescription;
+        this.player = player;
 
         if (selectedItemUI != null)
         {
@@ -29,89 +29,86 @@ public class InventoryItemSlotUIManager
         }
     }
 
-    
-
-// ...
-
-/// <summary>
-/// Adds an item UI to this panel.
-/// </summary>
-public GameObject AddItem(GameObject itemUIPrefab)
-{
-    GameObject itemUI = Object.Instantiate(itemUIPrefab, itemUIPanel);
-
-    // Ensure a Button component exists and add a listener for left-click
-    var button = itemUI.GetComponent<Button>();
-    if (button == null)
+    /// <summary>
+    /// Adds an item UI to this panel.
+    /// </summary>
+    public GameObject AddItem(GameObject itemUIPrefab)
     {
-        button = itemUI.AddComponent<Button>();
-    }
+        GameObject itemUI = Object.Instantiate(itemUIPrefab, itemUIPanel);
 
-    button.onClick.AddListener(() => ToggleSelection(itemUI)); // Handle left-click for selection
-
-    // Add an EventTrigger to detect right-click
-    var eventTrigger = itemUI.GetComponent<EventTrigger>();
-    if (eventTrigger == null)
-    {
-        eventTrigger = itemUI.AddComponent<EventTrigger>();
-    }
-
-    // Add a new entry for right-click
-    var rightClickEntry = new EventTrigger.Entry
-    {
-        eventID = EventTriggerType.PointerClick
-    };
-    rightClickEntry.callback.AddListener((eventData) =>
-    {
-        var pointerEventData = eventData as PointerEventData;
-        if (pointerEventData != null && pointerEventData.button == PointerEventData.InputButton.Right)
+        // Ensure a Button component exists and add a listener for left-click
+        var button = itemUI.GetComponent<Button>();
+        if (button == null)
         {
-            ConsumeItem(itemUI); // Call ConsumeItem when right-clicked
+            button = itemUI.AddComponent<Button>();
         }
-    });
 
-    eventTrigger.triggers.Add(rightClickEntry);
+        button.onClick.AddListener(() => ToggleSelection(itemUI)); // Handle left-click for selection
 
-    return itemUI;
-}
+        // Add an EventTrigger to detect right-click
+        var eventTrigger = itemUI.GetComponent<EventTrigger>();
+        if (eventTrigger == null)
+        {
+            eventTrigger = itemUI.AddComponent<EventTrigger>();
+        }
+
+        // Add a new entry for right-click
+        var rightClickEntry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerClick
+        };
+        rightClickEntry.callback.AddListener((eventData) =>
+        {
+            var pointerEventData = eventData as PointerEventData;
+            if (pointerEventData != null && pointerEventData.button == PointerEventData.InputButton.Right)
+            {
+                ConsumeItem(itemUI); // Call ConsumeItem when right-clicked
+            }
+        });
+
+        eventTrigger.triggers.Add(rightClickEntry);
+
+        return itemUI;
+    }
 
     /// <summary>
-/// Consumes the specified item and removes it from the UI.
-/// </summary>
-private void ConsumeItem(GameObject itemUI)
-{
-    var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
-    if (itemComponent != null && itemComponent.itemData != null)
+    /// Consumes the specified item and removes it from the UI.
+    /// </summary>
+    private void ConsumeItem(GameObject itemUI)
     {
-        // Call the Consume method on the item
-        itemComponent.Consume(player); 
+        if (player == null)
+        {
+            Debug.LogError("Player reference is missing!");
+            return;
+        }
 
-        
-        
+        var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
+        if (itemComponent != null && itemComponent.itemData != null)
+        {
+            // Call the Consume method on the item
+            itemComponent.Consume(player);
 
-        // Remove the item from the UI
-        Object.Destroy(itemUI); // Destroy the item UI GameObject
-        Debug.Log($"Item '{itemComponent.itemData.name}' consumed!");
+            // Remove the item from the UI
+            Object.Destroy(itemUI); // Destroy the item UI GameObject
+            Debug.Log($"Item '{itemComponent.itemData.name}' consumed!");
+        }
+        else
+        {
+            Debug.LogError("Item component or ItemData is missing on the item UI.");
+        }
     }
-    else
-    {
-        Debug.LogError("Item component or ItemData is missing on the item UI.");
-    }
-}
 
-
-
-/// <summary>
-/// Toggles the selection state of an item.
-/// </summary>
-private void ToggleSelection(GameObject itemUI)
+    /// <summary>
+    /// Toggles the selection state of an item.
+    /// </summary>
+    private void ToggleSelection(GameObject itemUI)
     {
         SelectItem(itemUI);
     }
 
     /// <summary>
-    /// Selects an item and distinguished it from a clone
-
+    /// Selects an item and updates the UI details for it.
+    /// </summary>
     private void SelectItem(GameObject itemUI)
     {
         if (selectedItemUI == null)
@@ -138,9 +135,11 @@ private void ToggleSelection(GameObject itemUI)
         UpdateRightSide(itemUI);
     }
 
+    /// <summary>
+    /// Updates the spotlight, name, and description UI for the selected item.
+    /// </summary>
     private void UpdateRightSide(GameObject itemUI)
     {
-        // Update the UI with details from the selected item
         var itemComponent = itemUI.GetComponent<Item>(); // Ensure the item prefab has the Item component
         if (itemComponent != null && itemComponent.itemData != null)
         {

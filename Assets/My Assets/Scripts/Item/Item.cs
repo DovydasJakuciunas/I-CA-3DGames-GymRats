@@ -20,10 +20,24 @@ namespace GD.Items
 
         public string Description => itemData != null ? itemData.ItemType.ToString() : "No Description"; // Expose description
 
-        public void Consume(GameObject consumer)
+        public void Consume(GameObject player)
         {
             Debug.Log("Consuming item: " + itemData.name);
+
+            // Find the GameManager and check if it has a StaminaManager
+            StaminaManager staminaManager = GameObject.FindObjectOfType<StaminaManager>();
+            if (staminaManager != null && itemData != null)
+            {
+                staminaManager.RestoreStamina(itemData.ItemValue);
+                Debug.Log($"{itemData.ItemValue} stamina restored!");
+            }
+            else
+            {
+                Debug.LogWarning("StaminaManager or ItemData is missing!");
+            }
         }
+
+
 
         private void OnTriggerEnter(Collider other)
         {

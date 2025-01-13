@@ -42,16 +42,21 @@ using UnityEngine;
         [Tooltip("The position of the audio source that plays the audio clip")]
         private Vector3 audioPosition;
 
-        #endregion Fields
+        [SerializeField]
+        [Tooltip("The item value for restoring stamina")]
+        private int itemValue;
 
-        #region Properties
+    #endregion Fields
 
-        public ItemCategoryType ItemCategory { get => itemCategory; set => itemCategory = value; }
+    #region Properties
+
+    public ItemCategoryType ItemCategory { get => itemCategory; set => itemCategory = value; }
         public ItemType ItemType { get => itemType; set => itemType = value; }
 
         public Sprite UiIcon { get => uiIcon; set => uiIcon = value; }
         public AudioClip AudioClip { get => audioClip; set => audioClip = value; }
         public Vector3 AudioPosition { get => audioPosition; set => audioPosition = value; }
+        public int ItemValue { get => itemValue; set => itemValue = value; }
 
-        #endregion Properties
-    }
+    #endregion Properties
+}

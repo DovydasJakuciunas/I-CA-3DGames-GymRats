@@ -4,17 +4,15 @@ public class StaminaManager : MonoBehaviour
 {
     public int maxStamina = 100;
     public int currentStamina;
-
     public StaminaBar staminaBar;
 
-    // Start is called before the first frame update
     void Start()
     {
         currentStamina = maxStamina;
         staminaBar.SetMaxStamina(maxStamina);
     }
 
-    private void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -31,8 +29,21 @@ public class StaminaManager : MonoBehaviour
             staminaBar.SetStamina(currentStamina);
             Debug.Log("Stamina used: " + stamina);
         }
-        else if (currentStamina <= 0) {
-            Debug.Log("Not enough stamina");
+        else
+        {
+            Debug.Log("Not enough stamina!");
         }
+    }
+
+    public void RestoreStamina(int stamina)
+    {
+        currentStamina += stamina;
+        if (currentStamina > maxStamina)
+        {
+            currentStamina = maxStamina;
+        }
+
+        staminaBar.SetStamina(currentStamina);
+        Debug.Log("Stamina restored: " + stamina);
     }
 }
